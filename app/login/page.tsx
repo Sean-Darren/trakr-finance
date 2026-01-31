@@ -3,6 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,16 +15,49 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    //Connect Login with the Database
-    console.log("Login attempt:", { email, password });
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error("Login Failed", {
+          description: data.error || "Invalid credentials",
+        });
+        return;
+      }
+
+      toast.success("Success!", {
+        description: "You have been logged in successfully.",
+      });
+
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error("Error", {
+        description: "An error occurred. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,8 +125,9 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 className="w-full h-12 text-base bg-green-900 hover:bg-green-950 font-medium"
+                disabled={isLoading}
               >
-                Sign In
+                {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
 
