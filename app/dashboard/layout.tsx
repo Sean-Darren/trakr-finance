@@ -4,9 +4,10 @@ import type React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import {
   Home,
   TrendingUp,
@@ -36,12 +37,29 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  const handleLogout = () => {
-    //Logout Congiguration (LATER)
-    console.log("Logout");
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        toast.success("Logged out", {
+          description: "You have been logged out successfully.",
+          duration: 3000,
+        });
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error("Error", {
+        description: "Could not log out. Please try again.",
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -58,7 +76,7 @@ export default function DashboardLayout({
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-200 ease-in-out lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-full flex-col">
@@ -90,7 +108,7 @@ export default function DashboardLayout({
                       "w-full justify-start gap-3 h-12 text-base font-medium",
                       isActive
                         ? "bg-green-900 text-sidebar-primary-foreground"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                     )}
                   >
                     <item.icon className="w-5 h-5" />
