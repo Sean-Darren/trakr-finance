@@ -4,6 +4,7 @@ import type React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,10 +16,13 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,10 +30,64 @@ export default function SignupPage() {
     confirmPassword: "",
   });
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    //Connect SignUp to database and the logic
-    console.log("Signup attempt:", formData);
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Password Mismatch", {
+        description: "Passwords do not match. Please try again.",
+        duration: 4000,
+      });
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast.error("Weak Password", {
+        description: "Password must be at least 6 characters.",
+        duration: 4000,
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error("Signup Failed", {
+          description: data.error || "Could not create account",
+          duration: 5000,
+        });
+        return;
+      }
+
+      toast.success("Success!", {
+        description: "Account created successfully. Redirecting...",
+        duration: 3000,
+      });
+
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error("Error", {
+        description: "An error occurred. Please try again.",
+        duration: 5000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -141,8 +199,9 @@ export default function SignupPage() {
               <Button
                 type="submit"
                 className="w-full h-12 text-base bg-green-900 hover:bg-green-950 font-medium"
+                disabled={isLoading}
               >
-                Create Account
+                {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
 
