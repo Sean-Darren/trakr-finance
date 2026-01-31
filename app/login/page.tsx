@@ -31,7 +31,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-green-700 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-green-800 rounded-xl flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-primary-foreground" />
             </div>
             <h1 className="text-2xl font-bold text-foreground">Trakr</h1>
@@ -90,7 +90,7 @@ export default function LoginPage() {
               </div>
               <Button
                 type="submit"
-                className="w-full h-12 text-base bg-green-700 hover:bg-green-900 font-medium"
+                className="w-full h-12 text-base bg-green-900 hover:bg-green-950 font-medium"
               >
                 Sign In
               </Button>

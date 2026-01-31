@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white border-4 border-emerald-950 rounded-2xl overflow-hidden m-3">
+      <header className="bg-white border-2 border-emerald-950 rounded-2xl overflow-hidden m-3">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-green-800 rounded-lg flex items-center justify-center">
