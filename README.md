@@ -2,6 +2,7 @@
 
 A full-stack personal finance management application.
 
+## Features
 ### Core Features
 - 🔐 **Secure Authentication**: JWT tokens stored in HTTP-only cookies with bcrypt password hashing and session management
 - 📊 **Smart Transaction Management**: Log, categorize, and filter income/expenses with custom categories, payment methods, dates, and recurring transaction support
