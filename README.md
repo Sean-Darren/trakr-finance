@@ -62,7 +62,7 @@ The application uses the following main models:
 - DELETE /api/investments/[id] - Delete investment
 
 ### Goals
-- \`GET /api/goals\` - Get all goals
-- \`POST /api/goals\` - Create goal
-- \`PUT /api/goals/[id]\` - Update goal
-- \`DELETE /api/goals/[id]\` - Delete goal
+- GET /api/goals - Get all goals
+- POST /api/goals - Create goal
+- PUT /api/goals/[id] - Update goal
+- DELETE /api/goals/[id] - Delete goal
